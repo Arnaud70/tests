@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Cœur t'Attend 💖</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Pages */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Style commun pour toutes les pages */
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #ff6b8b;
+        }
+
+        .heart-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath fill='%23ff6b8b' d='M50,85 C45,80 20,60 20,40 C20,25 32,15 45,15 C55,15 60,20 50,30 C40,20 45,15 55,15 C68,15 80,25 80,40 C80,60 55,80 50,85 Z'/%3E%3C/svg%3E");
+            background-size: 100px;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            color: #ff6b8b;
+            font-size: 2.8rem;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Page 1: Saisie du nom */
+        .intro-text {
+            font-size: 1.4rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .name-form {
+            margin: 30px 0;
+        }
+
+        .name-form label {
+            display: block;
+            color: #555;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .name-input-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .name-input {
+            width: 300px;
+            padding: 18px 25px;
+            border-radius: 50px;
+            border: 3px solid #ffafbd;
+            font-size: 1.3rem;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s;
+            background-color: white;
+        }
+
+        .name-input:focus {
+            border-color: #ff6b8b;
+            box-shadow: 0 0 15px rgba(255, 107, 139, 0.5);
+        }
+
+        .name-submit {
+            margin-top: 30px;
+            padding: 18px 50px;
+            font-size: 1.4rem;
+            background: linear-gradient(to right, #ff6b8b, #ff8e9e);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .name-submit:hover {
+            background: linear-gradient(to right, #ff5577, #ff7a8e);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(255, 107, 139, 0.4);
+        }
+
+        .name-submit:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Page 2: Demande en Valentine */
+        .valentine-message {
+            font-size: 1.6rem;
+            color: #333;
+            line-height: 1.7;
+            margin: 30px 0;
+            padding: 25px;
+            background-color: rgba(255, 235, 238, 0.7);
+            border-radius: 15px;
+            border-left: 5px solid #ff6b8b;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 20px 50px;
+            font-size: 1.6rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            min-width: 200px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-yes {
+            background: linear-gradient(to right, #ff6b8b, #ff8e9e);
+            color: white;
+        }
+
+        .btn-yes:hover {
+            background: linear-gradient(to right, #ff5577, #ff7a8e);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(255, 107, 139, 0.4);
+        }
+
+        .btn-no {
+            background: linear-gradient(to right, #6b8bff, #8e9eff);
+            color: white;
+            position: relative;
+        }
+
+        /* Page 3: Après le OUI */
+        .celebration-page {
+            text-align: center;
+        }
+
+        .celebration-title {
+            color: #ff6b8b;
+            font-size: 3rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .celebration-message {
+            font-size: 1.8rem;
+            color: #333;
+            line-height: 1.8;
+            margin: 30px 0;
+            padding: 30px;
+            background-color: rgba(255, 235, 238, 0.7);
+            border-radius: 20px;
+        }
+
+        .celebration-surprise {
+            font-size: 5rem;
+            margin: 30px 0;
+            animation: bounce 2s infinite, rainbow 4s infinite;
+        }
+
+        .romantic-plan {
+            font-size: 1.5rem;
+            color: #555;
+            line-height: 1.6;
+            margin: 25px 0;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            border: 2px dashed #ff6b8b;
+        }
+
+        .final-signature {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 3px solid #ffafbd;
+            color: #ff6b8b;
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .countdown {
+            font-size: 1.8rem;
+            color: #ff6b8b;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .music-control {
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            color: #555;
+        }
+
+        .music-btn {
+            background-color: #ff6b8b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-btn:hover {
+            background-color: #ff5577;
+            transform: scale(1.1);
+        }
+
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff6b8b;
+            font-size: 24px;
+            opacity: 0;
+            animation: floatUp 5s linear infinite;
+        }
+
+        footer {
+            margin-top: 40px;
+            color: #777;
+            font-size: 1rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-30px); }
+            60% { transform: translateY(-15px); }
+        }
+
+        @keyframes rainbow {
+            0% { color: #ff6b8b; }
+            25% { color: #ff8e53; }
+            50% { color: #ffce53; }
+            75% { color: #8e6bff; }
+            100% { color: #ff6b8b; }
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                border-width: 5px;
+            }
+            
+            h1, .celebration-title {
+                font-size: 2.2rem;
+            }
+            
+            .intro-text {
+                font-size: 1.2rem;
+            }
+            
+            .valentine-message, .celebration-message {
+                font-size: 1.4rem;
+                padding: 20px;
+            }
+            
+            .name-input {
+                width: 100%;
+                max-width: 280px;
+                padding: 15px 20px;
+            }
+            
+            .buttons {
+                gap: 20px;
+            }
+            
+            .btn {
+                padding: 16px 40px;
+                font-size: 1.4rem;
+                min-width: 170px;
+            }
+            
+            .celebration-surprise {
+                font-size: 3.5rem;
+            }
+            
+            .final-signature {
+                font-size: 1.6rem;
+            }
+            
+            .countdown {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1, .celebration-title {
+                font-size: 1.8rem;
+            }
+            
+            .valentine-message, .celebration-message {
+                font-size: 1.2rem;
+            }
+            
+            .name-input {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .celebration-surprise {
+                font-size: 3rem;
+            }
+            
+            .final-signature {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Conteneur pour les cœurs animés -->
+    <div class="hearts-container" id="heartsContainer"></div>
+    
+    <!-- Page 1: Saisie du nom -->
+    <div class="page active" id="page1">
+        <div class="container">
+            <div class="heart-background"></div>
+            <div class="content">
+                <h1>Mon Cœur t'Attend 💖</h1>
+                
+                <div class="intro-text">
+                    Avant de découvrir le message spécial que j'ai préparé pour toi, j'aimerais savoir comment tu t'appelles.
+                </div>
+                
+                <div class="name-form">
+                    <label for="nameInput">Quel est ton prénom ?</label>
+                    <div class="name-input-wrapper">
+                        <input type="text" id="nameInput" class="name-input" placeholder="Entre ton prénom ici" maxlength="20">
+                    </div>
+                    <button class="name-submit" id="nameSubmit" disabled>
+                        <i class="fas fa-heart"></i> Découvrir le message
+                    </button>
+                </div>
+                
+                <div class="intro-text">
+                    Une fois que tu auras saisi ton prénom, tu découvriras un message spécial que j'ai préparé avec tout mon cœur.
+                </div>
+                
+                <footer>
+                    Une surprise t'attende de l'autre côté...
+                </footer>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Page 2: Demande en Valentine -->
+    <div class="page" id="page2">
+        <div class="container">
+            <div class="heart-background"></div>
+            <div class="content">
+                <h1>Une Question du Cœur 💖</h1>
+                
+                <div class="valentine-message" id="valentineMessage">
+                    <!-- Le message sera généré dynamiquement avec le prénom -->
+                </div>
+                
+                <div class="buttons">
+                    <button class="btn btn-yes" id="yesBtn">
+                        <i class="fas fa-heart"></i> OUI, JE VEUX !
+                    </button>
+                    <button class="btn btn-no" id="noBtn">
+                        <i class="fas fa-times"></i> NON
+                    </button>
+                </div>
+                
+                <div class="music-control">
+                    <button class="music-btn" id="musicBtn">
+                        <i class="fas fa-music"></i>
+                    </button>
+                    <span>Musique romantique</span>
+                </div>
+                
+                <footer>
+                    Prends ton temps, mon cœur t'attendra...
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 3: Célébration après le OUI -->
+    <div class="page" id="page3">
+        <div class="container celebration-page">
+            <div class="heart-background"></div>
+            <div class="content">
+                <h1 class="celebration-title" id="celebrationTitle">FÉLICITATIONS ! 💖</h1>
+                
+                <div class="celebration-message" id="celebrationMessage">
+                    <!-- Le message de célébration sera généré dynamiquement -->
+                </div>
+                
+                <div class="celebration-surprise" id="celebrationSurprise">
+                    💝🎉🎁
+                </div>
+                
+                <div class="romantic-plan">
+                    <p><i class="fas fa-calendar-alt"></i> <strong>Notre soirée du 14 février :</strong></p>
+                    <p>• Dîner aux chandelles dans ton restaurant préféré</p>
+                    <p>• Promenade sous les étoiles avec une surprise spéciale</p>
+                    <p>• Un cadeau que tu n'oublieras jamais...</p>
+                </div>
+                
+                <div class="countdown" id="countdown">
+                    <!-- Le compte à rebours sera généré dynamiquement -->
+                </div>
+                
+                <div class="music-control">
+                    <button class="music-btn" id="musicBtn3">
+                        <i class="fas fa-music"></i>
+                    </button>
+                    <span>Notre chanson spéciale</span>
+                </div>
+                
+                <div class="final-signature" id="finalSignature">
+                    <!-- Ta signature apparaîtra ici -->
+                </div>
+                
+                <footer>
+                    Ce n'est que le début de notre belle histoire...
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <!-- Musique romantique -->
+    <audio id="romanticMusic" loop>
+        <source src="https://assets.codepen.io/1468070/romantic-piano.mp3" type="audio/mpeg">
+        Votre navigateur ne supporte pas l'élément audio.
+    </audio>
+
+    <script>
+        // Éléments DOM
+        const page1 = document.getElementById('page1');
+        const page2 = document.getElementById('page2');
+        const page3 = document.getElementById('page3');
+        const nameInput = document.getElementById('nameInput');
+        const nameSubmit = document.getElementById('nameSubmit');
+        const valentineMessage = document.getElementById('valentineMessage');
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const celebrationTitle = document.getElementById('celebrationTitle');
+        const celebrationMessage = document.getElementById('celebrationMessage');
+        const celebrationSurprise = document.getElementById('celebrationSurprise');
+        const countdown = document.getElementById('countdown');
+        const finalSignature = document.getElementById('finalSignature');
+        const musicBtn = document.getElementById('musicBtn');
+        const musicBtn3 = document.getElementById('musicBtn3');
+        const romanticMusic = document.getElementById('romanticMusic');
+        const heartsContainer = document.getElementById('heartsContainer');
+
+        // Variables
+        let userName = '';
+        let noBtnClickCount = 0;
+        let isMusicPlaying = false;
+        
+        // Messages pour le bouton NON
+        const messages = [
+            "Es-tu sûr(e)?",
+            "Vraiment sûr(e)?",
+            "Réfléchis encore!",
+            "Dernière chance!",
+            "Tu vas le regretter!",
+            "S'il te plaît!",
+            "Je vais être triste!",
+            "Tu casses mon cœur! 💔"
+        ];
+        
+        // Activer/désactiver le bouton de soumission
+        nameInput.addEventListener('input', function() {
+            nameSubmit.disabled = this.value.trim() === '';
+        });
+        
+        // Soumission du nom
+        nameSubmit.addEventListener('click', function() {
+            userName = nameInput.value.trim();
+            if (userName === '') return;
+            
+            // Générer le message personnalisé pour la page 2
+            const message = `
+                <p>Ma chère <strong>${userName}</strong>,</p>
+                <p>Depuis que tu es entrée dans ma vie, chaque instant est devenu précieux. Ton sourire illumine mes journées, ta voix apaise mon esprit, et ta présence réchauffe mon cœur.</p>
+                <p>À tes côtés, j'ai découvert un bonheur que je ne connaissais pas. Tu es la personne qui me comprend sans que j'aie besoin de parler, qui me soutient dans mes moments difficiles, et qui partage mes joies les plus simples.</p>
+                <p>Aujourd'hui, j'ai une question très importante à te poser...</p>
+                <p style="font-size: 2rem; color: #ff6b8b; margin-top: 20px;">
+                    <strong>Veux-tu être ma Valentine ? 💖</strong>
+                </p>
+            `;
+            
+            valentineMessage.innerHTML = message;
+            
+            // Changer de page avec une animation
+            switchPage(page1, page2);
+        });
+        
+        // Permettre également la soumission avec la touche Entrée
+        nameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && this.value.trim() !== '') {
+                nameSubmit.click();
+            }
+        });
+
+        // Bouton OUI - Redirection vers page 3
+        yesBtn.addEventListener('click', function() {
+            // Générer le message de célébration
+            celebrationTitle.innerHTML = `${userName}, TU AS DIT OUI ! 💖`;
+            
+            const celebrationText = `
+                <p>Je suis le plus heureux du monde ! Tu as fait le plus beau choix et tu as rendu mon cœur incroyablement joyeux.</p>
+                <p>Notre histoire est le plus beau cadeau que la vie m'ait offert, et je promets de faire de chaque jour une nouvelle page de notre roman.</p>
+                <p>Tu es la personne la plus incroyable que j'aie jamais rencontrée, et je vais tout faire pour te rendre aussi heureuse que tu me rends heureux.</p>
+            `;
+            
+            celebrationMessage.innerHTML = celebrationText;
+            
+            // Mettre ta signature (remplace "John" par ton prénom)
+            finalSignature.innerHTML = `Pour toujours et à jamais,<br><span style="font-size: 2.5rem; color: #ff6b8b;">John</span>`;
+            
+            // Configurer le compte à rebours pour le 14 février
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            
+            // Changer de page avec animation
+            switchPage(page2, page3);
+            
+            // Faire apparaître des cœurs
+            createHearts(100);
+            
+            // Jouer de la musique
+            if (!isMusicPlaying) {
+                romanticMusic.play().catch(e => {
+                    console.log("Lecture automatique bloquée");
+                });
+                isMusicPlaying = true;
+                musicBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                musicBtn3.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            
+            // Afficher un message spécial dans la console
+            console.log("%c 💖 FÉLICITATIONS ! 💖", "color: #ff6b8b; font-size: 24px; font-weight: bold;");
+            console.log(`%c ${userName} a dit OUI ! C'est le début d'une belle histoire d'amour...`, "color: #333; font-size: 16px;");
+        });
+
+        // Bouton NON qui s'enfuit
+        noBtn.addEventListener('mouseover', function() {
+            // Augmenter le compteur de clics
+            noBtnClickCount++;
+            
+            // Changer le texte du bouton après quelques tentatives
+            if (noBtnClickCount <= messages.length) {
+                noBtn.innerHTML = `<i class="fas fa-times"></i> ${messages[noBtnClickCount-1]}`;
+            }
+            
+            // Déplacer le bouton à une position aléatoire
+            const container = document.querySelector('.buttons');
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            
+            // Calculer les limites de déplacement
+            const maxX = containerRect.width - btnRect.width;
+            const maxY = containerRect.height - btnRect.height;
+            
+            // Position aléatoire dans les limites
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            // Appliquer la nouvelle position
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = `${randomX}px`;
+            noBtn.style.top = `${randomY}px`;
+            
+            // Après 8 tentatives, le bouton devient plus petit
+            if (noBtnClickCount >= 8) {
+                noBtn.style.transform = 'scale(0.8)';
+            }
+            
+            // Créer des cœurs brisés
+            if (noBtnClickCount >= 4) {
+                createBrokenHearts(5);
+            }
+        });
+
+        // Contrôle de la musique (page 2)
+        musicBtn.addEventListener('click', function() {
+            toggleMusic();
+        });
+
+        // Contrôle de la musique (page 3)
+        musicBtn3.addEventListener('click', function() {
+            toggleMusic();
+        });
+
+        // Fonction pour basculer la musique
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                romanticMusic.pause();
+                musicBtn.innerHTML = '<i class="fas fa-music"></i>';
+                musicBtn3.innerHTML = '<i class="fas fa-music"></i>';
+            } else {
+                romanticMusic.play().catch(e => {
+                    alert("Pour activer la musique, cliquez d'abord sur la page");
+                });
+                musicBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                musicBtn3.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        // Fonction pour changer de page avec animation
+        function switchPage(fromPage, toPage) {
+            fromPage.classList.remove('active');
+            setTimeout(() => {
+                toPage.classList.add('active');
+                // Créer des cœurs pour célébrer
+                createHearts(20);
+            }, 300);
+        }
+
+        // Fonction pour créer des cœurs flottants
+        function createHearts(count) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.innerHTML = '💖';
+                    
+                    // Position aléatoire
+                    const left = Math.random() * 100;
+                    heart.style.left = `${left}%`;
+                    
+                    // Animation aléatoire
+                    const duration = 3 + Math.random() * 4;
+                    const delay = Math.random() * 2;
+                    heart.style.animation = `floatUp ${duration}s linear ${delay}s infinite`;
+                    
+                    // Taille aléatoire
+                    const size = 20 + Math.random() * 30;
+                    heart.style.fontSize = `${size}px`;
+                    
+                    // Couleur aléatoire
+                    const colors = ['#ff6b8b', '#ff8e9e', '#ffafbd', '#ffc3a0'];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    heart.style.color = color;
+                    
+                    heartsContainer.appendChild(heart);
+                    
+                    // Supprimer le cœur après l'animation
+                    setTimeout(() => {
+                        heart.remove();
+                    }, (duration + delay) * 1000);
+                }, i * 50);
+            }
+        }
+
+        // Fonction pour créer des cœurs brisés
+        function createBrokenHearts(count) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.innerHTML = '💔';
+                    
+                    // Position près du bouton NON
+                    const left = 40 + Math.random() * 20;
+                    heart.style.left = `${left}%`;
+                    
+                    // Animation plus rapide
+                    const duration = 2 + Math.random() * 2;
+                    heart.style.animation = `floatUp ${duration}s linear 0s forwards`;
+                    
+                    // Taille
+                    heart.style.fontSize = `28px`;
+                    
+                    heartsContainer.appendChild(heart);
+                    
+                    // Supprimer le cœur après l'animation
+                    setTimeout(() => {
+                        heart.remove();
+                    }, duration * 1000);
+                }, i * 200);
+            }
+        }
+
+        // Fonction pour le compte à rebours vers le 14 février
+        function updateCountdown() {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            let valentineDate = new Date(currentYear, 1, 14); // 14 février
+            
+            // Si la Saint-Valentin est déjà passée cette année, prendre l'année prochaine
+            if (now > valentineDate) {
+                valentineDate = new Date(currentYear + 1, 1, 14);
+            }
+            
+            const diff = valentineDate - now;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            countdown.innerHTML = `
+                <i class="fas fa-clock"></i> Notre première Saint-Valentin dans :<br>
+                ${days} jours, ${hours} heures, ${minutes} minutes, ${seconds} secondes
+            `;
+            
+            // Animation spéciale pour le cœur
+            const heartSymbols = ['💖', '💕', '💗', '💓', '💞'];
+            const randomHeart = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+            celebrationSurprise.innerHTML = `${randomHeart}🎉🎁`;
+        }
+
+        // Créer quelques cœurs au chargement de la page
+        window.addEventListener('load', () => {
+            createHearts(10);
+            
+            // Message de bienvenue dans la console
+            console.log("%c 💘 Bienvenue dans l'application Valentine ! 💘", "color: #ff6b8b; font-size: 20px; font-weight: bold;");
+            console.log("%c Cette application a été créée avec amour pour demander à quelqu'un d'être ta Valentine.", "color: #333; font-size: 14px;");
+            
+            // N'oublie pas de remplacer "John" par ton prénom à la ligne 268
+            console.log("%c Remplace 'Wizy Dev' par ton prénom à la ligne 268 du code !", "color: #ff6b8b; font-size: 16px;");
+        });
+    </script>
+</body>
+</html>
